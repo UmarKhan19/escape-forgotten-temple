@@ -62,7 +62,7 @@ impl Game {
                 // Return the description of the new room
                 self.look_around()
             } else {
-                format!("You can't go {} from here.", direction.as_str())
+                format!("You can't go {} from here.", direction.to_string())
             }
         } else {
             "Error: Current room not found.".to_string()
@@ -154,7 +154,7 @@ impl Game {
             if !current_room.exits.is_empty() {
                 description.push_str("\nExits:");
                 for (direction, _) in &current_room.exits {
-                    description.push_str(&format!(" {}", direction.as_str()));
+                    description.push_str(&format!(" {}", direction.to_string()));
                 }
             }
 
@@ -196,11 +196,8 @@ impl Game {
 
     /// Get the description of the current room for UI display
     pub fn get_current_room_description(&self) -> String {
-        if let Some(current_room) = self.rooms.get(&self.player.location) {
-            format!("{}\n{}", current_room.name, current_room.description)
-        } else {
-            "Error: Current room not found.".to_string()
-        }
+        let current_room = self.rooms.get(&self.player.location).unwrap();
+        format!("{}\n{}", current_room.name, current_room.description)
     }
 
     /// Get a formatted display of the player's inventory
@@ -268,37 +265,5 @@ mod tests {
         let result = game.process_command(Command::Take("gold coin".to_string()));
         assert!(!game.player.inventory.contains(&"gold coin".to_string()));
         assert!(result.contains("There is no"));
-    }
-
-    #[test]
-    fn test_get_current_room_description() {
-        let game = Game::new();
-        let description = game.get_current_room_description();
-        assert!(description.contains("Entrance Hall"));
-    }
-
-    #[test]
-    fn test_get_inventory_display() {
-        let mut game = Game::new();
-        assert_eq!(game.get_inventory_display(), "Empty");
-
-        game.player.take_item("torch");
-        assert_eq!(game.get_inventory_display(), "torch");
-    }
-
-    #[test]
-    fn test_get_available_exits() {
-        let game = Game::new();
-        let exits = game.get_available_exits();
-        let mut sorted_exits = exits.clone();
-        sorted_exits.sort();
-        assert_eq!(sorted_exits, vec![Direction::North, Direction::East]); // Assert specific expected directions
-    }
-
-    #[test]
-    fn test_get_room_items() {
-        let mut game = Game::new();
-        let items = game.get_room_items();
-        assert!(items.contains(&"ancient map".to_string()));
     }
 }

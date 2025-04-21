@@ -5,13 +5,13 @@ mod input;
 mod ui;
 
 use druid::{AppLauncher, WindowDesc};
-use ui::{UiState, build_ui, WINDOW_TITLE};
+use ui::{UiState, build_ui};
 
 /// The main entry point for the game.
 fn main() {
     // Create the main window
     let main_window = WindowDesc::new(build_ui())
-        .title(WINDOW_TITLE)
+        .title("Escape the Forgotten Temple")
         .window_size((800.0, 600.0));
 
     // Create the initial game state

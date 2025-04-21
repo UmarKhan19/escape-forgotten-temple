@@ -21,8 +21,8 @@ impl Direction {
         }
     }
 
-    /// Returns a string slice representing the direction
-    pub fn as_str(&self) -> &str {
+    /// Converts a Direction enum value to a string
+    pub fn to_string(&self) -> &str {
         match self {
             Direction::North => "north",
             Direction::East => "east",
