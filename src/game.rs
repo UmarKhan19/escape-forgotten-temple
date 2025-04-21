@@ -4,6 +4,7 @@ use crate::player::Player;
 use crate::input::Command;
 
 /// Game state and logic
+#[derive(Clone)]
 pub struct Game {
     /// All rooms in the game
     rooms: HashMap<String, Room>,
@@ -61,7 +62,7 @@ impl Game {
                 // Return the description of the new room
                 self.look_around()
             } else {
-                format!("You can't go {} from here.", direction.to_string())
+                format!("You can't go {} from here.", direction.as_str())
             }
         } else {
             "Error: Current room not found.".to_string()
@@ -153,7 +154,7 @@ impl Game {
             if !current_room.exits.is_empty() {
                 description.push_str("\nExits:");
                 for (direction, _) in &current_room.exits {
-                    description.push_str(&format!(" {}", direction.to_string()));
+                    description.push_str(&format!(" {}", direction.as_str()));
                 }
             }
 
@@ -191,6 +192,42 @@ impl Game {
     /// Check if the game is over
     pub fn is_game_over(&self) -> bool {
         self.game_over
+    }
+
+    /// Get the description of the current room for UI display
+    pub fn get_current_room_description(&self) -> String {
+        if let Some(current_room) = self.rooms.get(&self.player.location) {
+            format!("{}\n{}", current_room.name, current_room.description)
+        } else {
+            "Error: Current room not found.".to_string()
+        }
+    }
+
+    /// Get a formatted display of the player's inventory
+    pub fn get_inventory_display(&self) -> String {
+        if self.player.inventory.is_empty() {
+            "Empty".to_string()
+        } else {
+            self.player.inventory.join(", ")
+        }
+    }
+
+    /// Get the available exits from the current room
+    pub fn get_available_exits(&self) -> Vec<Direction> {
+        if let Some(room) = self.rooms.get(&self.player.location) {
+            room.exits.keys().cloned().collect()
+        } else {
+            Vec::new()
+        }
+    }
+
+    /// Get items in the current room
+    pub fn get_room_items(&self) -> Vec<String> {
+        if let Some(room) = self.rooms.get(&self.player.location) {
+            room.items.clone()
+        } else {
+            Vec::new()
+        }
     }
 }
 
@@ -231,5 +268,35 @@ mod tests {
         let result = game.process_command(Command::Take("gold coin".to_string()));
         assert!(!game.player.inventory.contains(&"gold coin".to_string()));
         assert!(result.contains("There is no"));
+    }
+
+    #[test]
+    fn test_get_current_room_description() {
+        let game = Game::new();
+        let description = game.get_current_room_description();
+        assert!(description.contains("Entrance Hall"));
+    }
+
+    #[test]
+    fn test_get_inventory_display() {
+        let mut game = Game::new();
+        assert_eq!(game.get_inventory_display(), "Empty");
+
+        game.player.take_item("torch");
+        assert_eq!(game.get_inventory_display(), "torch");
+    }
+
+    #[test]
+    fn test_get_available_exits() {
+        let game = Game::new();
+        let exits = game.get_available_exits();
+        assert_eq!(exits, vec![Direction::North, Direction::East]); // Assert specific expected directions
+    }
+
+    #[test]
+    fn test_get_room_items() {
+        let mut game = Game::new();
+        let items = game.get_room_items();
+        assert!(items.contains(&"ancient map".to_string()));
     }
 }

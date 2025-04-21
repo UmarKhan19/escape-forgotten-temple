@@ -21,8 +21,8 @@ impl Direction {
         }
     }
 
-    /// Converts a Direction enum value to a string
-    pub fn to_string(&self) -> &str {
+    /// Returns a string slice representing the direction
+    pub fn as_str(&self) -> &str {
         match self {
             Direction::North => "north",
             Direction::East => "east",
@@ -33,7 +33,7 @@ impl Direction {
 }
 
 /// Represents a room in the game
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Room {
     /// Unique name/identifier for the room
     pub name: String,

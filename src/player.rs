@@ -1,5 +1,5 @@
 /// Represents the player in the game
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Player {
     /// The current room where the player is located
     pub location: String,

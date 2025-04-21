@@ -2,60 +2,24 @@ mod room;
 mod player;
 mod game;
 mod input;
+mod ui;
 
-use game::Game;
-use input::{read_input, parse_command};
+use druid::{AppLauncher, WindowDesc};
+use ui::{UiState, build_ui, WINDOW_TITLE};
 
 /// The main entry point for the game.
 fn main() {
-    // Display welcome message
-    print_welcome();
+    // Create the main window
+    let main_window = WindowDesc::new(build_ui())
+        .title(WINDOW_TITLE)
+        .window_size((800.0, 600.0));
 
-    // Create a new game
-    let mut game = Game::new();
+    // Create the initial game state
+    let initial_state = UiState::new();
 
-    // Display initial room description
-    println!("{}", game.look_around());
-    println!();
-
-    // Main game loop
-    while !game.is_game_over() {
-        // Read user input
-        let user_input = read_input();
-
-        // Parse the command
-        match parse_command(&user_input) {
-            Ok(command) => {
-                // Process the command and get the result
-                let result = game.process_command(command);
-
-                // Display the result
-                println!("{}", result);
-                println!();
-            },
-            Err(error) => {
-                // Display error message
-                println!("{}",error);
-                println!();
-            }
-        }
-    }
-}
-
-/// Displays the welcome message and game title
-fn print_welcome() {
-    println!("=============================================");
-    println!("|                                           |");
-    println!("|         ESCAPE THE FORGOTTEN TEMPLE       |");
-    println!("|             A Text Adventure              |");
-    println!("|                                           |");
-    println!("=============================================");
-    println!();
-    println!("You are an explorer who has ventured deep into a newly discovered ancient temple.");
-    println!("While examining the inner chambers, a sudden tremor shakes the ground,");
-    println!("causing a cave-in that blocks the entrance behind you.");
-    println!("You must find another way out of this forgotten temple before it becomes your tomb.");
-    println!();
-    println!("Type 'help' for a list of commands.");
-    println!();
+    // Launch the app
+    AppLauncher::with_window(main_window)
+        .log_to_console()
+        .launch(initial_state)
+        .expect("Failed to launch application");
 }
