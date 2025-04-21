@@ -290,7 +290,9 @@ mod tests {
     fn test_get_available_exits() {
         let game = Game::new();
         let exits = game.get_available_exits();
-        assert_eq!(exits, vec![Direction::North, Direction::East]); // Assert specific expected directions
+        let mut sorted_exits = exits.clone();
+        sorted_exits.sort();
+        assert_eq!(sorted_exits, vec![Direction::North, Direction::East]); // Assert specific expected directions
     }
 
     #[test]

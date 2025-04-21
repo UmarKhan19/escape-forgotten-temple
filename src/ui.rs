@@ -9,7 +9,7 @@ use crate::room::Direction;
 use crate::input::{Command, parse_command};
 
 // Constants for UI sizing and styling
-const WINDOW_TITLE: &str = "Escape the Forgotten Temple";
+pub const WINDOW_TITLE: &str = "Escape the Forgotten Temple";
 const WINDOW_WIDTH: f64 = 800.0;
 const WINDOW_HEIGHT: f64 = 600.0;
 const PADDING: f64 = 8.0;
