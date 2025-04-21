@@ -1,6 +1,6 @@
 [package]
 name = "escape-forgotten-temple"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Umar Khan"]
 description = "A text-based adventure game where you navigate through a forgotten temple"
@@ -8,4 +8,8 @@ description = "A text-based adventure game where you navigate through a forgotte
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# No external dependencies required
+druid = "0.8.3"
+
+[features]
+default = ["ui"]
+ui = []
